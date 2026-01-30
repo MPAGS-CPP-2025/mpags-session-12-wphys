@@ -4,6 +4,8 @@
 #include "CipherMode.hpp"
 
 #include <string>
+#include <map>
+
 
 /**
  * \file PlayfairCipher.hpp
@@ -43,6 +45,8 @@ class PlayfairCipher {
   private:
     /// The cipher key
     std::string key_{""};
+    std::map<char, std::pair<int, int>> letterToCoords;
+    std::map<std::pair<int, int>, char> coordsToLetter;
 };
 
 #endif
