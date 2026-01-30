@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include <string>
-
+#include <iostream>
 /**
  * \file PlayfairCipher.cpp
  * \brief Contains the implementation of the PlayfairCipher class
@@ -26,12 +26,34 @@ void PlayfairCipher::setKey(const std::string& key)
                    ::toupper);
 
     // Remove non-alphabet characters
+    key_.erase(std::remove_if(key_.begin(), key_.end(), [](const char c) {
+        return !std::isalpha(c);
+    }), key_.end());
 
+    
     // Change J -> I
+    std::replace(key_.begin(), key_.end(), 'J', 'I');
 
     // Remove duplicated letters
+    std::string encounteredLetters{""};
+    key_.erase(std::remove_if(key_.begin(), key_.end(),
+                   [&encounteredLetters](const char c) {
+                       if (encounteredLetters.find(c) == std::string::npos) {
+                           encounteredLetters += c;
+                           return false;
+                       }
+                       return true;
+                   }), key_.end());
 
     // Store the coordinates of each letter
+    for (size_t i = 0; i < key_.size(); ++i)
+    {
+        const char c = key_[i];
+        const int row = i / 5;
+        const int col = i % 5;
+        letterToCoords[c] = std::make_pair(row, col);
+        coordsToLetter[std::make_pair(row, col)] = c;
+    }
 }
 
 std::string PlayfairCipher::applyCipher(const std::string& inputText,
